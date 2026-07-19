@@ -1,0 +1,10 @@
+{
+  "name": "PyPractice",
+  "short_name": "PyPractice",
+  "description": "在浏览器中渐进式练习 Python 基础语法",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#0284c7"
+}
