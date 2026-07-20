@@ -8,8 +8,11 @@ import { SubmissionResults } from '../components/judge/SubmissionResults'
 import { LearningTools } from '../components/practice/LearningTools'
 import { PracticeSessionSummary } from '../components/practice/PracticeSessionSummary'
 import { RunnerConsole } from '../components/runner/RunnerConsole'
+import { GuideReader } from '../components/tutoring/GuideReader'
+import { LlmChatPanel } from '../components/tutoring/LlmChatPanel'
 import { buttonClass, Card, EmptyState, Page } from '../components/ui/Page'
 import { chapters, chapterById } from '../data/chapters'
+import { learningGuides } from '../data/learningGuides'
 import { knowledgePointById } from '../data/knowledgePoints'
 import { questions } from '../data/questions'
 import {
@@ -573,6 +576,29 @@ function QuestionCollection({
         </Card>
       ))}
     </div>
+  )
+}
+
+export function QnaPage() {
+  const [chapterId, setChapterId] = useState(learningGuides[0]?.chapterId ?? '')
+  const guide = learningGuides.find((item) => item.chapterId === chapterId)
+  const chapter = chapterById.get(chapterId)
+
+  return (
+    <Page title="答疑中心" description="系统梳理知识点、标记个人笔记，并在配置接口后向 AI 助教提问。">
+      <Card className="mb-5">
+        <label className="grid gap-2 text-sm font-medium sm:max-w-md">
+          选择学习单元
+          <select className="rounded-xl border border-slate-200 bg-transparent px-3 py-2 dark:border-slate-700" value={chapterId} onChange={(event) => setChapterId(event.target.value)}>
+            {learningGuides.map((item) => <option key={item.chapterId} value={item.chapterId}>{chapterById.get(item.chapterId)?.order}. {item.title}</option>)}
+          </select>
+        </label>
+      </Card>
+      {guide && <div className="grid gap-5 xl:grid-cols-[minmax(0,1.3fr)_minmax(22rem,0.7fr)]">
+        <Card><GuideReader guide={guide} /></Card>
+        <Card className="h-fit xl:sticky xl:top-20"><h2 className="text-lg font-semibold">互动答疑</h2><p className="mt-1 text-sm text-slate-600 dark:text-slate-300">围绕“{chapter?.title ?? guide.title}”提出问题。</p><div className="mt-4"><LlmChatPanel chapterTitle={chapter?.title ?? guide.title} /></div></Card>
+      </div>}
+    </Page>
   )
 }
 
