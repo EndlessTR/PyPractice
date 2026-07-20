@@ -15,8 +15,19 @@ type OpenAiCompatibleResponse = {
   error?: { message?: string }
 }
 
+export function normalizeLlmBaseUrl(baseUrl: string) {
+  const normalized = baseUrl.trim().replace(/\/$/, '')
+  try {
+    const url = new URL(normalized)
+    if (url.hostname === 'api.moonshot.cn' && !url.pathname.endsWith('/v1')) return `${normalized}/v1`
+  } catch {
+    // Keep the original value so fetch can return a useful browser error.
+  }
+  return normalized
+}
+
 export async function askLlm(config: LlmConfig, messages: LlmMessage[], signal?: AbortSignal): Promise<LlmMessage> {
-  const response = await fetch(`${config.baseUrl.replace(/\/$/, '')}/chat/completions`, {
+  const response = await fetch(`${normalizeLlmBaseUrl(config.baseUrl)}/chat/completions`, {
     method: 'POST',
     signal,
     headers: {

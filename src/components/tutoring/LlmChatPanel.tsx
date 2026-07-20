@@ -31,7 +31,11 @@ export function LlmChatPanel({ chapterTitle }: Props) {
       ])
       setMessages((current) => [...current, reply])
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : '互动答疑请求失败。')
+      if (caught instanceof TypeError && caught.message === 'Failed to fetch') {
+        setError('浏览器未能直连 Kimi。请确认接口地址为 https://api.moonshot.cn/v1，检查网络或广告拦截扩展后重试。')
+      } else {
+        setError(caught instanceof Error ? caught.message : '互动答疑请求失败。')
+      }
     } finally {
       setLoading(false)
     }
@@ -40,11 +44,11 @@ export function LlmChatPanel({ chapterTitle }: Props) {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-slate-600 dark:text-slate-300">已预设 Kimi（OpenAI 兼容）接口。密钥仅保留在当前页面内存，刷新后会清除。</p>
+        <p className="text-sm text-slate-600 dark:text-slate-300">直接从浏览器请求 Kimi（不经过本地代理）。密钥仅保留在当前页面内存，刷新后会清除。</p>
         <button className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium dark:border-slate-700" onClick={() => setShowSetup((value) => !value)}><Settings2 size={16} />{config ? '更改接口' : '配置接口'}</button>
       </div>
       {showSetup && <div className="grid gap-3 rounded-xl border border-slate-200 p-4 dark:border-slate-700 sm:grid-cols-2">
-        <label className="grid gap-1 text-sm sm:col-span-2">接口地址<input className="rounded-lg border border-slate-200 bg-transparent p-2 dark:border-slate-700" placeholder="https://api.moonshot.cn/v1" value={draftConfig.baseUrl} onChange={(event) => setDraftConfig((value) => ({ ...value, baseUrl: event.target.value }))} /></label>
+        <label className="grid gap-1 text-sm sm:col-span-2">接口地址<input className="rounded-lg border border-slate-200 bg-transparent p-2 dark:border-slate-700" placeholder="https://api.moonshot.cn/v1" value={draftConfig.baseUrl} onChange={(event) => setDraftConfig((value) => ({ ...value, baseUrl: event.target.value }))} /><small className="text-slate-600 dark:text-slate-300">Kimi 根地址会自动补全为 /v1。</small></label>
         <label className="grid gap-1 text-sm">模型名称<input className="rounded-lg border border-slate-200 bg-transparent p-2 dark:border-slate-700" placeholder="kimi-k3" value={draftConfig.model} onChange={(event) => setDraftConfig((value) => ({ ...value, model: event.target.value }))} /></label>
         <label className="grid gap-1 text-sm">API Key<input type="password" className="rounded-lg border border-slate-200 bg-transparent p-2 dark:border-slate-700" value={draftConfig.apiKey} onChange={(event) => setDraftConfig((value) => ({ ...value, apiKey: event.target.value }))} /></label>
         <button className="w-fit rounded-lg bg-brand-600 px-3 py-2 text-sm font-semibold text-white disabled:opacity-50" disabled={!draftConfig.baseUrl || !draftConfig.model || !draftConfig.apiKey} onClick={() => { setConfig(draftConfig); setShowSetup(false); setError(undefined) }}>保存到本次会话</button>
