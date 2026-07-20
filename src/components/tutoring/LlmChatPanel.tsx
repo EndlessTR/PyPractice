@@ -9,7 +9,7 @@ type Props = { chapterTitle: string }
 
 export function LlmChatPanel({ chapterTitle }: Props) {
   const [config, setConfig] = useState<LlmConfig>()
-  const [draftConfig, setDraftConfig] = useState<LlmConfig>({ baseUrl: 'https://api.moonshot.cn/v1', apiKey: '', model: 'kimi-k3' })
+  const [draftConfig, setDraftConfig] = useState<LlmConfig>({ baseUrl: 'https://api.moonshot.cn/v1', apiKey: '', model: 'kimi-k2.6' })
   const [messages, setMessages] = useState<LlmMessage[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -49,11 +49,11 @@ export function LlmChatPanel({ chapterTitle }: Props) {
       </div>
       {showSetup && <div className="grid gap-3 rounded-xl border border-slate-200 p-4 dark:border-slate-700 sm:grid-cols-2">
         <label className="grid gap-1 text-sm sm:col-span-2">接口地址<input className="rounded-lg border border-slate-200 bg-transparent p-2 dark:border-slate-700" placeholder="https://api.moonshot.cn/v1" value={draftConfig.baseUrl} onChange={(event) => setDraftConfig((value) => ({ ...value, baseUrl: event.target.value }))} /><small className="text-slate-600 dark:text-slate-300">Kimi 根地址会自动补全为 /v1。</small></label>
-        <label className="grid gap-1 text-sm">模型名称<input className="rounded-lg border border-slate-200 bg-transparent p-2 dark:border-slate-700" placeholder="kimi-k3" value={draftConfig.model} onChange={(event) => setDraftConfig((value) => ({ ...value, model: event.target.value }))} /></label>
+        <label className="grid gap-1 text-sm">模型名称<input className="rounded-lg border border-slate-200 bg-transparent p-2 dark:border-slate-700" placeholder="kimi-k2.6" value={draftConfig.model} onChange={(event) => setDraftConfig((value) => ({ ...value, model: event.target.value }))} /></label>
         <label className="grid gap-1 text-sm">API Key<input type="password" className="rounded-lg border border-slate-200 bg-transparent p-2 dark:border-slate-700" value={draftConfig.apiKey} onChange={(event) => setDraftConfig((value) => ({ ...value, apiKey: event.target.value }))} /></label>
         <button className="w-fit rounded-lg bg-brand-600 px-3 py-2 text-sm font-semibold text-white disabled:opacity-50" disabled={!draftConfig.baseUrl || !draftConfig.model || !draftConfig.apiKey} onClick={() => { setConfig(draftConfig); setShowSetup(false); setError(undefined) }}>保存到本次会话</button>
       </div>}
-      {!config ? <div className="grid min-h-52 place-items-center rounded-xl border border-dashed border-slate-300 p-6 text-center dark:border-slate-700"><div><Bot className="mx-auto text-brand-600" size={32} /><h2 className="mt-3 font-semibold">等待配置 Kimi 接口</h2><p className="mt-2 text-sm text-slate-600 dark:text-slate-300">已填入 Kimi 服务地址和 kimi-k3；输入 API Key 后即可提问。</p></div></div> : <>
+      {!config ? <div className="grid min-h-52 place-items-center rounded-xl border border-dashed border-slate-300 p-6 text-center dark:border-slate-700"><div><Bot className="mx-auto text-brand-600" size={32} /><h2 className="mt-3 font-semibold">等待配置 Kimi 接口</h2><p className="mt-2 text-sm text-slate-600 dark:text-slate-300">已填入 Kimi 服务地址和 kimi-k2.6；输入 API Key 后即可提问。</p></div></div> : <>
         <div className="min-h-52 space-y-3 rounded-xl border border-slate-200 p-4 dark:border-slate-700" aria-live="polite">
           {!messages.length && <p className="text-sm text-slate-600 dark:text-slate-300">例如：为什么条件判断中要注意边界顺序？</p>}
           {messages.map((message, index) => <div className={`rounded-xl p-3 text-sm whitespace-pre-wrap ${message.role === 'user' ? 'ml-8 bg-brand-600 text-white' : 'mr-8 bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100'}`} key={`${message.role}-${index}`}>{message.content}</div>)}
