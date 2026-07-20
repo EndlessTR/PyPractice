@@ -36,7 +36,7 @@ export function RunnerConsole({ status, result, message, stdin, onStdinChange, o
         />
       </label>
       <div className="p-3">
-        <div className="mb-2 flex items-center justify-between text-xs text-slate-500">
+        <div className="mb-2 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600 dark:text-slate-300">
           <span>运行输出</span>{result && <span>{result.durationMs} ms</span>}
         </div>
         <pre className="min-h-28 max-h-80 overflow-auto whitespace-pre-wrap rounded-lg bg-slate-950 p-3 text-sm text-slate-100" aria-label="程序运行输出">

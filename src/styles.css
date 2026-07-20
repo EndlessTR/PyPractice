@@ -5,6 +5,11 @@
   html {
     font-family:
       Inter,
+      'PingFang SC',
+      'Hiragino Sans GB',
+      'Microsoft YaHei',
+      'Noto Sans CJK SC',
+      'Source Han Sans SC',
       ui-sans-serif,
       system-ui,
       -apple-system,
@@ -14,14 +19,37 @@
   body {
     margin: 0;
     min-width: 320px;
+    overflow-x: hidden;
   }
   button,
-  a {
+  a,
+  input,
+  select,
+  textarea {
     -webkit-tap-highlight-color: transparent;
+    font: inherit;
+  }
+  button {
+    white-space: normal;
+  }
+  p,
+  h1,
+  h2,
+  h3,
+  label,
+  span {
+    overflow-wrap: anywhere;
   }
   :focus-visible {
     outline: 3px solid #0284c7;
     outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .text-safe {
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
 }
 

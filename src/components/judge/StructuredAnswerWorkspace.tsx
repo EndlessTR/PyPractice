@@ -61,7 +61,7 @@ export function StructuredAnswerWorkspace({ question, onSubmit, disabled }: Prop
                   )
                 }
               />
-              <span>{choice.id}. {choice.text}</span>
+              <span className="min-w-0 flex-1">{choice.id}. {choice.text}</span>
             </label>
           ))}
         </div>

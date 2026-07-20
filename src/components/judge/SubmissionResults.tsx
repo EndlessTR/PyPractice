@@ -24,8 +24,8 @@ export function SubmissionResults({ result, running, error, onCancel }: Props) {
       className="mt-4 overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700"
       aria-live="polite"
     >
-      <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3 dark:border-slate-700">
-        <span className="flex items-center gap-2 font-semibold">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 px-4 py-3 dark:border-slate-700">
+        <span className="flex min-w-0 items-center gap-2 font-semibold">
           <FlaskConical size={17} /> 提交判定
         </span>
         {running && onCancel ? (
@@ -46,8 +46,8 @@ export function SubmissionResults({ result, running, error, onCancel }: Props) {
             className="rounded-lg border border-slate-200 p-3 text-sm dark:border-slate-700"
             key={test.testCaseId}
           >
-            <div className="flex items-center justify-between gap-3">
-              <span className="flex items-center gap-2 font-medium">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <span className="flex min-w-0 items-center gap-2 font-medium">
                 {test.passed ? (
                   <CheckCircle2 className="text-emerald-600" size={16} />
                 ) : (

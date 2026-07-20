@@ -91,7 +91,7 @@ export function AppLayout() {
         <div className="mb-7 flex items-center justify-between px-2">
           <NavLink to="/" className="flex items-center gap-3" onClick={closeSidebar}>
             <span className="grid h-10 w-10 place-items-center rounded-xl bg-brand-600 font-bold text-white">Py</span>
-            <span><b className="block text-lg">PyPractice</b><small className="text-slate-500">Python 编程练习</small></span>
+            <span className="min-w-0"><b className="block text-lg">PyPractice</b><small className="block text-slate-600 dark:text-slate-300">Python 编程练习</small></span>
           </NavLink>
           <button ref={closeButtonRef} className="lg:hidden" aria-label="关闭菜单" onClick={closeSidebar}><X /></button>
         </div>
@@ -99,7 +99,7 @@ export function AppLayout() {
           {navigationItems.map(([to, label, Icon]) => (
             <NavLink end={to === '/'} key={to} to={to} onClick={closeSidebar} className={({ isActive }) =>
               `flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium ${isActive ? 'bg-brand-50 text-brand-700 dark:bg-brand-500/15 dark:text-sky-300' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'}`
-            }><Icon size={18} />{label}</NavLink>
+            }><Icon className="shrink-0" size={18} /><span className="min-w-0">{label}</span></NavLink>
           ))}
         </nav>
       </aside>
