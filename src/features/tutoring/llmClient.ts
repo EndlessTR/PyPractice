@@ -1,4 +1,8 @@
-export type LlmMessage = { role: 'system' | 'user' | 'assistant'; content: string }
+export type LlmMessage = {
+  role: 'system' | 'user' | 'assistant'
+  content: string
+  reasoning_content?: string
+}
 
 export type LlmConfig = {
   baseUrl: string
@@ -7,11 +11,11 @@ export type LlmConfig = {
 }
 
 type OpenAiCompatibleResponse = {
-  choices?: Array<{ message?: { content?: string } }>
+  choices?: Array<{ message?: { content?: string; reasoning_content?: string } }>
   error?: { message?: string }
 }
 
-export async function askLlm(config: LlmConfig, messages: LlmMessage[], signal?: AbortSignal) {
+export async function askLlm(config: LlmConfig, messages: LlmMessage[], signal?: AbortSignal): Promise<LlmMessage> {
   const response = await fetch(`${config.baseUrl.replace(/\/$/, '')}/chat/completions`, {
     method: 'POST',
     signal,
@@ -19,11 +23,12 @@ export async function askLlm(config: LlmConfig, messages: LlmMessage[], signal?:
       'Content-Type': 'application/json',
       Authorization: `Bearer ${config.apiKey}`,
     },
-    body: JSON.stringify({ model: config.model, messages, temperature: 0.3 }),
+    body: JSON.stringify({ model: config.model, messages }),
   })
   const payload = (await response.json().catch(() => ({}))) as OpenAiCompatibleResponse
   if (!response.ok) throw new Error(payload.error?.message ?? `请求失败（${response.status}）`)
-  const content = payload.choices?.[0]?.message?.content?.trim()
+  const message = payload.choices?.[0]?.message
+  const content = message?.content?.trim()
   if (!content) throw new Error('模型没有返回可显示的内容。')
-  return content
+  return { role: 'assistant', content, ...(message?.reasoning_content ? { reasoning_content: message.reasoning_content } : {}) }
 }
