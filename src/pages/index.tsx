@@ -1,5 +1,5 @@
 import { BarChart3, BookHeart, FileCode2, FileText, Footprints } from 'lucide-react'
-import { useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 
 import { QuestionCodeEditor } from '../components/editor/QuestionCodeEditor'
@@ -9,7 +9,6 @@ import { LearningTools } from '../components/practice/LearningTools'
 import { PracticeSessionSummary } from '../components/practice/PracticeSessionSummary'
 import { RunnerConsole } from '../components/runner/RunnerConsole'
 import { GuideReader } from '../components/tutoring/GuideReader'
-import { LlmChatPanel } from '../components/tutoring/LlmChatPanel'
 import { buttonClass, Card, EmptyState, Page } from '../components/ui/Page'
 import { chapters, chapterById } from '../data/chapters'
 import { learningGuides } from '../data/learningGuides'
@@ -42,6 +41,8 @@ import {
 
 const selectClass =
   'rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900'
+
+const LlmChatPanel = lazy(async () => ({ default: (await import('../components/tutoring/LlmChatPanel')).LlmChatPanel }))
 
 export function HomePage() {
   const questionCount = questionProvider.list().length
@@ -596,7 +597,7 @@ export function QnaPage() {
       </Card>
       {guide && <div className="grid gap-5 xl:grid-cols-[minmax(0,1.3fr)_minmax(22rem,0.7fr)]">
         <Card><GuideReader guide={guide} /></Card>
-        <Card className="h-fit xl:sticky xl:top-20"><h2 className="text-lg font-semibold">互动答疑</h2><p className="mt-1 text-sm text-slate-600 dark:text-slate-300">围绕“{chapter?.title ?? guide.title}”提出问题。</p><div className="mt-4"><LlmChatPanel chapterTitle={chapter?.title ?? guide.title} /></div></Card>
+        <Card className="h-fit xl:sticky xl:top-20"><h2 className="text-lg font-semibold">互动答疑</h2><p className="mt-1 text-sm text-slate-600 dark:text-slate-300">围绕“{chapter?.title ?? guide.title}”提出问题。</p><div className="mt-4"><Suspense fallback={<p className="text-sm text-slate-600 dark:text-slate-300">正在加载答疑工具…</p>}><LlmChatPanel chapterTitle={chapter?.title ?? guide.title} /></Suspense></div></Card>
       </div>}
     </Page>
   )

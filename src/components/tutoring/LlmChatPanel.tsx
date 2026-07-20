@@ -1,11 +1,41 @@
 import { Bot, Send, Settings2 } from 'lucide-react'
 import { useState } from 'react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 import { askLlm, type LlmConfig, type LlmMessage } from '../../features/tutoring'
 
 const SYSTEM_PROMPT = '你是 PyPractice 的 Python 学习助教。用中文回答，先给出清晰结论，再说明原因；不要直接替学生完成题目，优先给提示、思路和可运行的小例子。'
 
 type Props = { chapterTitle: string }
+
+function MarkdownAnswer({ children }: { children: string }) {
+  return (
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      skipHtml
+      components={{
+        h1: ({ children: content }) => <h1 className="mb-3 text-xl font-bold">{content}</h1>,
+        h2: ({ children: content }) => <h2 className="mb-3 mt-5 text-lg font-bold">{content}</h2>,
+        h3: ({ children: content }) => <h3 className="mb-2 mt-4 font-bold">{content}</h3>,
+        p: ({ children: content }) => <p className="mb-3 leading-7 last:mb-0">{content}</p>,
+        ul: ({ children: content }) => <ul className="mb-3 list-disc space-y-1 pl-5">{content}</ul>,
+        ol: ({ children: content }) => <ol className="mb-3 list-decimal space-y-1 pl-5">{content}</ol>,
+        blockquote: ({ children: content }) => <blockquote className="my-3 border-l-4 border-brand-400 pl-3 text-slate-600 dark:text-slate-300">{content}</blockquote>,
+        a: ({ children: content, href }) => <a className="font-medium underline underline-offset-2" href={href} target="_blank" rel="noreferrer">{content}</a>,
+        code: ({ children: content, className }) => className
+          ? <code className="block overflow-x-auto rounded-lg bg-slate-950 p-3 font-mono text-xs text-slate-100">{content}</code>
+          : <code className="rounded bg-slate-200 px-1 py-0.5 font-mono text-[0.85em] dark:bg-slate-700">{content}</code>,
+        pre: ({ children: content }) => <pre className="my-3 overflow-hidden">{content}</pre>,
+        table: ({ children: content }) => <div className="my-3 overflow-x-auto"><table className="w-full border-collapse text-left text-xs">{content}</table></div>,
+        th: ({ children: content }) => <th className="border border-slate-300 bg-slate-200 p-2 dark:border-slate-600 dark:bg-slate-700">{content}</th>,
+        td: ({ children: content }) => <td className="border border-slate-300 p-2 align-top dark:border-slate-600">{content}</td>,
+      }}
+    >
+      {children}
+    </ReactMarkdown>
+  )
+}
 
 export function LlmChatPanel({ chapterTitle }: Props) {
   const [config, setConfig] = useState<LlmConfig>()
@@ -56,7 +86,7 @@ export function LlmChatPanel({ chapterTitle }: Props) {
       {!config ? <div className="grid min-h-52 place-items-center rounded-xl border border-dashed border-slate-300 p-6 text-center dark:border-slate-700"><div><Bot className="mx-auto text-brand-600" size={32} /><h2 className="mt-3 font-semibold">等待配置 Kimi 接口</h2><p className="mt-2 text-sm text-slate-600 dark:text-slate-300">已填入 Kimi 服务地址和 kimi-k2.6；输入 API Key 后即可提问。</p></div></div> : <>
         <div className="min-h-52 space-y-3 rounded-xl border border-slate-200 p-4 dark:border-slate-700" aria-live="polite">
           {!messages.length && <p className="text-sm text-slate-600 dark:text-slate-300">例如：为什么条件判断中要注意边界顺序？</p>}
-          {messages.map((message, index) => <div className={`rounded-xl p-3 text-sm whitespace-pre-wrap ${message.role === 'user' ? 'ml-8 bg-brand-600 text-white' : 'mr-8 bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100'}`} key={`${message.role}-${index}`}>{message.content}</div>)}
+          {messages.map((message, index) => <div className={`rounded-xl p-3 text-sm ${message.role === 'user' ? 'ml-8 whitespace-pre-wrap bg-brand-600 text-white' : 'mr-8 bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100'}`} key={`${message.role}-${index}`}>{message.role === 'assistant' ? <MarkdownAnswer>{message.content}</MarkdownAnswer> : message.content}</div>)}
           {loading && <p className="text-sm text-slate-600 dark:text-slate-300">助教正在思考…</p>}
         </div>
         {error && <p className="text-sm text-red-600" role="alert">{error}</p>}
