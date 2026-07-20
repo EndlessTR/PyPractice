@@ -595,9 +595,9 @@ export function QnaPage() {
           </select>
         </label>
       </Card>
-      {guide && <div className="grid gap-5 xl:grid-cols-[minmax(0,1.3fr)_minmax(22rem,0.7fr)]">
-        <Card><GuideReader guide={guide} /></Card>
-        <Card className="h-fit xl:sticky xl:top-20"><h2 className="text-lg font-semibold">互动答疑</h2><p className="mt-1 text-sm text-slate-600 dark:text-slate-300">围绕“{chapter?.title ?? guide.title}”提出问题。</p><div className="mt-4"><Suspense fallback={<p className="text-sm text-slate-600 dark:text-slate-300">正在加载答疑工具…</p>}><LlmChatPanel chapterTitle={chapter?.title ?? guide.title} /></Suspense></div></Card>
+      {guide && <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1.3fr)_minmax(20rem,0.7fr)]">
+        <Card><div className="mx-auto max-w-3xl"><GuideReader guide={guide} /></div></Card>
+        <Card className="h-fit lg:sticky lg:top-20"><h2 className="text-lg font-semibold">互动答疑</h2><p className="mt-1 text-sm text-slate-600 dark:text-slate-300">围绕“{chapter?.title ?? guide.title}”提出问题。</p><div className="mt-4"><Suspense fallback={<p className="text-sm text-slate-600 dark:text-slate-300">正在加载答疑工具…</p>}><LlmChatPanel chapterTitle={chapter?.title ?? guide.title} /></Suspense></div></Card>
       </div>}
     </Page>
   )

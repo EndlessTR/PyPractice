@@ -15,10 +15,10 @@ const makeQuestion = (overrides: Partial<Question> = {}): Question => ({
 
 describe('LocalQuestionProvider', () => {
   test('只发布题库中已审核通过的题目', () => {
-    expect(questions).toHaveLength(60)
-    expect(questions.filter((question) => question.status === 'approved')).toHaveLength(60)
+    expect(questions).toHaveLength(74)
+    expect(questions.filter((question) => question.status === 'approved')).toHaveLength(74)
     expect(questions.filter((question) => question.status === 'review')).toHaveLength(0)
-    expect(questionProvider.list()).toHaveLength(60)
+    expect(questionProvider.list()).toHaveLength(74)
   })
 
   test('只发布 approved 题目并支持组合筛选', () => {
